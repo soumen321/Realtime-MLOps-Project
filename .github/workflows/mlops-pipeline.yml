@@ -46,7 +46,7 @@ jobs:
 
         - name: Upload Model to S3
           run: |
-              aws s3 cp model/churn_model.pkl s3://${{ env.S3_BUCKET }}/model/churn_model.pkl  
+              aws s3 cp models/churn_model.pkl s3://${{ env.S3_BUCKET }}/model/churn_model.pkl  
               echo "Model uploaded to S3:// ${{ env.S3_BUCKET }}/model/churn_model.pkl"      
         
         
