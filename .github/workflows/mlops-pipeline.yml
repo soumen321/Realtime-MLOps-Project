@@ -53,9 +53,9 @@ jobs:
         - name: Update inference.yaml with S3 model path
           run: |
                 MODEL_URI="s3://${{ env.S3_BUCKET }}/model/churn_model.pkl"
-                sed -i "s|storageUri: .*|storageUri: $MODEL_URI|g" k8s/inference.yaml
+                sed -i "s|storageUri: .*|storageUri: $MODEL_URI|g" k8s/inference.yml
             
-        - name: Commit updated inference.yaml
+        - name: Commit updated inference.yml
           run: |
                 git config --local user.email "action@github.com"
                 git config --local user.name "GitHub Action"
