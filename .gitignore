@@ -1,0 +1,17 @@
+# Virtual environments
+.venv/
+venv/
+
+# Python cache
+__pycache__/
+.ipynb_checkpoints/
+*.pyc
+
+# DVC
+.dvc/
+.dvc/cache/
+.dvc/tmp/
+
+# Data & models
+data/
+models/*.pkl
