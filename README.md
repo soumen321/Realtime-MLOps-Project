@@ -179,6 +179,34 @@ predictions
 {1}  
 
 
+Create a CI file in workflows using github action
+
+Using ARGOCD we deploy inference.yml
+
+Goto Ardo CD doc
+
+kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+Though I have use kind cluster, so i port-forward ArgoCD then i get access argocd user interphase
+
+kubectl get svc -n argocd
+
+kubectl port-forward svc/argocd-server  7003:80 --address 0.0.0.0 -n argocd
+
+for usename and password
+
+kubectl get secrets -n argocd
+kubectl edit secrets/argocd-initial-admin-secret -n argocd
+
+echo <> | base64 --decode
+
+admin / <password>
+
+kubectl get secret -n ml
+
+ kubectl edit secret s3-secret -n ml 
+
 
 
 
