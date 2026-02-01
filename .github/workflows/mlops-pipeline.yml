@@ -1,0 +1,64 @@
+name: MLOps Pipeline
+
+on:
+  push:
+    branches: [ main ]
+
+env:
+    AWS_REGION: us-east-1
+    S3_BUCKET: churn-model-demo-soumen-1981   
+
+jobs:
+    train-and-deploy:
+        runs-on: ubuntu-latest
+        permissions:
+          contents: write
+
+        steps:
+        - name: Checkout code
+          uses: actions/checkout@v3
+          with:
+            token: ${{ secrets.GITHUB_TOKEN }} # Use buils-in token
+
+        - name: Set up Python
+          uses: actions/setup-python@v4
+          with:
+              python-version: '3.11'
+
+        - name: Install dependencies
+          run: |
+              pip install -r requirements.txt
+
+        - name: Generate dataset
+          run: |
+              python generate_data.py     
+
+        - name: Train Model
+          run: |
+              python train.py
+
+        - name: Configure AWS Credentials
+          uses: aws-actions/configure-aws-credentials@v2
+          with:
+                aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                aws-region: ${{ env.AWS_REGION }}
+
+        - name: Upload Model to S3
+          run: |
+              aws s3 cp model/churn_model.pkl s3://${{ env.S3_BUCKET }}/model/churn_model.pkl  
+              echo "Model uploaded to S3:// ${{ env.S3_BUCKET }}/model/churn_model.pkl"      
+        
+        
+        - name: Update inference.yaml with S3 model path
+          run: |
+                MODEL_URI="s3://${{ env.S3_BUCKET }}/model/churn_model.pkl"
+                sed -i "s|storageUri: .*|storageUri: $MODEL_URI|g" k8s/inference.yaml
+            
+        - name: Commit updated inference.yaml
+          run: |
+                git config --local user.email "action@github.com"
+                git config --local user.name "GitHub Action"
+                git add k8s/inference.yaml
+                git commit -m "Update model S3 path [skip ci]" || echo "No changes"
+                git push || echo "No changes to push"

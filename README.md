@@ -76,6 +76,111 @@ Mode                 LastWriteTime         Length Name
 -a----          2/1/2026   9:32 PM            100 churn_data.csv.dvc
 
 
+ store the model -> .pkl file in S3 bucket
+
+
+ ### Create kubernetes cluster (Demo purpose use kind)
+
+ kind create cluster --name=churn-model-cluster
+
+ ## Install Kserve
+
+ Use for:
+
+  - Model deploying
+  - Model Serving
+  - Model Inferance
+
+ Install Cert Manager
+
+ kubectl apply -f https://github.com/cert-manager/cert-manager/releases/latest/download/cert-manager.yaml
+
+ Install KServe CRDs
+
+ kubectl create namespace kserve
+
+ for powershell
+
+ helm install kserve-crd oci://ghcr.io/kserve/charts/kserve-crd `
+  --version v0.16.0 `
+  -n kserve `
+  --wait
+
+for linux  
+
+helm install kserve-crd oci://ghcr.io/kserve/charts/kserve-crd \
+  --version v0.16.0 \
+  -n kserve \
+  --wait
+
+kubectl get crds  
+
+Install KServe controller
+
+for windows:
+
+helm install kserve oci://ghcr.io/kserve/charts/kserve --version v0.16.0 -n kserve --set kserve.controller.deploymentMode=RawDeployment --wait
+
+for linux:
+
+helm install kserve oci://ghcr.io/kserve/charts/kserve \
+  --version v0.16.0 \
+  -n kserve \
+  --set kserve.controller.deploymentMode=RawDeployment \
+  --wait
+
+kubectl get pods -n kserve  
+
+
+
+### Create Inference file
+
+Unable to access model from s3 because s3 not public
+
+For that we create a service account, from there we access the s3 bucket using aws creadentials
+
+How to do -> in service account add secrect which has aws cred
+
+kubectl create namespace ml
+
+create service account
+
+files in k8s folder
+
+service acc file:
+
+kubectl apply -f .\k8s\serviceaccount.yml
+
+kubectl get sa -n ml
+
+inference file:
+
+kubectl apply -f .\k8s\inference.yml
+
+kubectl get pods -n ml -w
+
+kubectl get svc -n ml
+
+kubectl port-forward svc/churn-predictor-predictor 7001:80 --address 0.0.0.0 -n ml
+
+
+POwershell
+
+Invoke-RestMethod -Method Post -Uri "http://localhost:7001/v1/models/churn-predictor:predict" `
+>>   -ContentType "application/json" `
+>>   -Body '{
+>>     "instances": [
+>>       [45, 24, 79.99, 1920.00, 3]
+>>     ]
+>>   }'
+
+predictions
+-----------
+{1}  
+
+
+
+
 
 
 
