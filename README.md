@@ -3,7 +3,7 @@
 
 _Real‑time telecom churn prediction with reproducible data, cloud model storage, production model serving, and GitOps CI/CD._
 
-![System Architecture](architecture.png)
+![System Architecture](./images/architecture.png)
 
 ---
 
@@ -243,7 +243,7 @@ Port‑forward the KServe service:
 ```bash
 kubectl port-forward svc/churn-predictor-predictor 7001:80 --address 0.0.0.0 -n ml
 
-![Port foward](ml1.png)
+![Port foward](./images/ml1.png)
 
 ```
 **Prediction (PowerShell):**
@@ -265,7 +265,7 @@ predictions
 
 ---
 
-![Result](ml2.png)
+![Result](./images/ml2.png)
 
 ## 🛠 Troubleshooting S3 Credentials
 If the pod cannot access S3, recreate the secret and restart pods:
@@ -316,22 +316,22 @@ echo <base64-password> | base64 --decode
 ```
 ArgoCD watches your repository and syncs `k8s/inference.yml` automatically when changes are pushed (typically triggered by **GitHub Actions** workflows).
 
-![ArgoCD Dashboard](argo.png)
+![ArgoCD Dashboard](./images/argo.png)
 
 **CI/CD Flow:**
 
-![CI/CD Flow](cicd_flow.png)
+![CI/CD Flow](./images/cicd_flow.png)
 
 ---
 
 ## 🧭 Architecture Diagrams
 - **System Architecture**: data → DVC/S3 → KServe on Kubernetes → ArgoCD
 
-  ![System Architecture](system_architecture.png)
+  ![System Architecture](./images/system_architecture.png)
 
 - **Inference Request Sequence**: client → service → predictor pod → S3
 
-  ![Inference Sequence](inference_sequence.png)
+  ![Inference Sequence](./images/inference_sequence.png)
 
 ---
 
