@@ -265,7 +265,7 @@ predictions
 
 ---
 
-![Port foward](ml2.png)
+![Result](ml2.png)
 
 ## 🛠 Troubleshooting S3 Credentials
 If the pod cannot access S3, recreate the secret and restart pods:
