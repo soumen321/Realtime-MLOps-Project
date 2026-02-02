@@ -242,6 +242,9 @@ kubectl get svc -n ml
 Port‑forward the KServe service:
 ```bash
 kubectl port-forward svc/churn-predictor-predictor 7001:80 --address 0.0.0.0 -n ml
+
+![Port foward](ml1.png)
+
 ```
 **Prediction (PowerShell):**
 ```powershell
@@ -261,6 +264,8 @@ predictions
 ```
 
 ---
+
+![Port foward](ml2.png)
 
 ## 🛠 Troubleshooting S3 Credentials
 If the pod cannot access S3, recreate the secret and restart pods:
@@ -310,6 +315,8 @@ echo <base64-password> | base64 --decode
 # Password: <decoded-value>
 ```
 ArgoCD watches your repository and syncs `k8s/inference.yml` automatically when changes are pushed (typically triggered by **GitHub Actions** workflows).
+
+![ArgoCD Dashboard](argo.png)
 
 **CI/CD Flow:**
 
